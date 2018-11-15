@@ -138,6 +138,7 @@ endfunction
 " Upload the file
 function! g:SyncUploadFile()
     call s:SyncExecuteCommand(s:SyncCreateVimUploadCommand())
+    redraw!
 
     return
 endfunction
