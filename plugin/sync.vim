@@ -25,6 +25,10 @@ if !exists('g:sync_async_upload')
     let g:sync_async_upload = 1
 endif
 
+if !exists('g:sync_whitelist')
+    let g:sync_whitelist = {}
+endif
+
 " Checks if the executable file was found and is executable by the current user
 function! s:SyncExeIsValid(filepath)
     return !empty(a:filepath) && sync#files#IsExecutable(a:filepath)
@@ -76,6 +80,13 @@ function! s:SyncCreateVimUploadCommand()
     let l:symlink_command  = ''
     let l:file_command     = s:SyncCreateShellCommand(l:action, l:file_fullpath)
     let l:command          = ''
+    let l:file_ext         = expand('%:e')
+
+    if !empty(g:sync_whitelist)
+        if !has_key(g:sync_whitelist, l:file_ext)
+            return l:command
+        endif
+    endif
 
     if empty(l:file_command)
         return ''
